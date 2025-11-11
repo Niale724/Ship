@@ -33,15 +33,26 @@ public class Ship : MonoBehaviour
     void Update()
     {
         float rotationInput = Input.GetAxis("Rotate");
-        float rotationAmount = RotateDegreesPerSecond * Time.deltaTime;
-        if (rotationInput < 0)
+        if (rotationInput != 0)
         {
-            rotationAmount *= -1;
+            float rotationAmount = RotateDegreesPerSecond * Time.deltaTime;
+            if (rotationInput < 0)
+            {
+                rotationAmount *= -1;
+            }
+            transform.Rotate(Vector3.forward, rotationAmount);
         }
-        transform.Rotate(Vector3.forward, rotationAmount);
 
+        UpdateThrustDirection();
     }
 
+    void UpdateThrustDirection()
+    {
+        float angleInDegrees = transform.eulerAngles.z;
+        float angleInRadians = angleInDegrees * Mathf.Deg2Rad;
+        thrustDirection.x = Mathf.Cos(angleInRadians);
+        thrustDirection.y = Mathf.Sin(angleInRadians);
+    }
     private void OnBecameInvisible()
     {
         WrapScreen();
